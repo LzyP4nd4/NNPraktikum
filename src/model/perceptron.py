@@ -50,30 +50,27 @@ class Perceptron(Classifier):
         self.weight = np.random.rand(self.trainingSet.input.shape[1])/100
 
     def train(self, verbose=True):
+        """
+        trains the perceptron with the training set
+        :param verbose: prints accuracy information if true
+        :return: trained perceptron ready to classify 7's
+        """
         for i in range(self.epochs):
             if verbose:
                 evaluator = Evaluator()
                 evaluator.printAccuracy(self.validationSet, self.evaluate(self.validationSet.input))
             for label,input in zip(self.trainingSet.label,self.trainingSet.input):
-                error = label - (self.fire(input))
+                error = label - int(self.fire(input))
                 self.updateWeights(input, error)
 
     def classify(self, testInstance):
-        return (self.fire(testInstance))
-        
+        return self.fire(testInstance)
 
     def evaluate(self, test=None):
-        """Evaluate a whole dataset.
-
-        Parameters
-        ----------
-        test : the dataset to be classified
-        if no test data, the test set associated to the classifier will be used
-
-        Returns
-        -------
-        List:
-            List of classified decisions for the dataset's entries.
+        """
+        Evaluate a whole dataset
+        :param test: test Input to be evaluated
+        :return: returns the  classified test Input
         """
         if test is None:
             test = self.testSet.input
@@ -82,9 +79,18 @@ class Perceptron(Classifier):
         return list(map(self.classify, test))
 
     def updateWeights(self, input, error):
+        """
+        updates the weights for the perceptron
+        :param input: is the new Input data
+        :param error: the error value calculated
+        :return: updates the perceptrons weight
+        """
         self.weight += self.learningRate*error*input
-        pass
          
     def fire(self, input):
-        """Fire the output of the perceptron corresponding to the input """
+        """
+        Fire the output of the perceptron corresponding to the input
+        :param input: Input Data for the perceptron
+        :return: returns a 1 for classifying as a 7 and 0 if it doesn't recognize it as a 7
+        """
         return Activation.sign(np.dot(np.array(input), self.weight))
