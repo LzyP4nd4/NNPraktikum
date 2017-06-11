@@ -73,7 +73,7 @@ class SumSquaredError(Error):
 
     def calculateError(self, target, output):
         # SSE = 1/2*sum (i=1 to n) of (target_i - output_i)^2)
-        pass
+        return - np.sum((target - output) ** 2)/2
 
 
 class BinaryCrossEntropyError(Error):

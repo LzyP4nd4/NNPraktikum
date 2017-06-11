@@ -3,9 +3,10 @@
 """
 Activation functions which can be used within neurons.
 """
-
+import numpy
 from numpy import exp
 from numpy import divide
+
 
 
 class Activation:
@@ -19,7 +20,8 @@ class Activation:
 
     @staticmethod
     def sigmoid(netOutput):
-        pass
+        return exp(-numpy.logaddexp(0, -netOutput))
+
     @staticmethod
     def sigmoidPrime(netOutput):
         # Here you have to code the derivative of sigmoid function

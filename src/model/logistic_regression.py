@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 import logging
 
 import numpy as np
+import sklearn.metrics as metrics
 
 from util.activation_functions import Activation
 from model.classifier import Classifier
@@ -46,40 +48,53 @@ class LogisticRegression(Classifier):
 
         # Initialize the weight vector with small values
         self.weight = 0.01*np.random.randn(self.trainingSet.input.shape[1])
+        self.error = np.zeros(self.epochs)
 
     def train(self, verbose=True):
         """Train the Logistic Regression.
-
         Parameters
         ----------
         verbose : boolean
             Print logging messages with validation accuracy if verbose is True.
         """
+        from util.loss_functions import DifferentError, SumSquaredError
+        loss = DifferentError()
+        #loss = SumSquaredError()
 
-        pass
-        
+        for epoch in range(self.epochs+1)[1:]:
+            grad = np.zeros((784,))
+            totalError = 0
+
+            for input, label in zip(self.trainingSet.input,
+                                    self.trainingSet.label):
+
+                output = self.fire(input)
+                error = loss.calculateError(label, output)
+                grad += error * input
+                totalError += error
+                self.updateWeights(grad)
+
+            if verbose:
+                logging.info("Epoch: %i; Error: %i", epoch, -totalError)
+
     def classify(self, testInstance):
         """Classify a single instance.
-
         Parameters
         ----------
         testInstance : list of floats
-
         Returns
         -------
         bool :
             True if the testInstance is recognized as a 7, False otherwise.
         """
-        pass
+        return 0.5 <= self.fire(testInstance)
 
     def evaluate(self, test=None):
         """Evaluate a whole dataset.
-
         Parameters
         ----------
         test : the dataset to be classified
         if no test data, the test set associated to the classifier will be used
-
         Returns
         -------
         List:
@@ -92,7 +107,7 @@ class LogisticRegression(Classifier):
         return list(map(self.classify, test))
 
     def updateWeights(self, grad):
-        pass
+        self.weight += self.learningRate * grad
 
     def fire(self, input):
         # Look at how we change the activation function here!!!!
