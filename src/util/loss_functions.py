@@ -85,7 +85,8 @@ class BinaryCrossEntropyError(Error):
         self.errorString = 'bce'
 
     def calculateError(self, target, output):
-        pass
+        output += 1e-7
+        return np.sum(target * np.log(output) + (1 - target) * np.log(1 - output))
 
 
 class CrossEntropyError(Error):

@@ -72,8 +72,8 @@ class LogisticRegression(Classifier):
                 error = loss.calculateError(label, output)
                 grad += error * input
                 totalError += error
-                self.updateWeights(grad)
 
+            self.updateWeights(grad)
             if verbose:
                 logging.info("Epoch: %i; Error: %i", epoch, -totalError)
 

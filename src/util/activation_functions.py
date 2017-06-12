@@ -58,7 +58,7 @@ class Activation:
     @staticmethod
     def softmax(netOutput):
         # Here you have to code the softmax function
-        pass
+        return numpy.exp(netOutput) /numpy.sum(numpy.exp(netOutput))
 
     @staticmethod
     def getActivation(str):
